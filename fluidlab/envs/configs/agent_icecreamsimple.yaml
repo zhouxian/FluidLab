@@ -1,0 +1,16 @@
+type: AgentInjector
+effectors:
+  - type: Injector
+    params:
+      locally_random: True
+      radius: 0.022
+      flux: 6
+      init_pos: (0.5, 0.85, 0.5)
+      inject_v: (0.0, -1.0, 0.0)
+      action_dim: 3
+      action_scale_p: (1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0)
+    boundary:
+      type: cube
+      lower: (0.05, 0.05, 0.05)
+      upper: (0.95, 0.95, 0.95)

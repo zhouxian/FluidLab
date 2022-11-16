@@ -1,0 +1,13 @@
+EXP:
+  seed: 0
+  env_name: 'LatteArt-v0'
+SOLVER:
+  n_iters: 500
+  init_range: 
+    v: ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
+    p: ((0.5, 0.73, 0.5), (0.5, 0.73, 0.5))
+  optim:
+    type: 'Adam'
+    lr: 1e-3
+    beta_1: 0.9
+    beta_2: 0.99

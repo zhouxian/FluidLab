@@ -1,0 +1,20 @@
+type: AgentRigid
+effectors:
+  - type: Rigid
+    params:
+      init_pos: (0.5, 0.5, 0.5)
+      init_euler: (0.0, 0.0, 0.0)
+      action_dim: 3
+      action_scale_p: (1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0)
+    mesh:
+      file: stirrer.obj
+      pos: (0.0, 0.0, 0.0)
+      scale: (0.6, 0.4, 0.6)
+      material: STIRRER
+      softness: 100.0
+    boundary:
+      type: cylinder
+      xz_radius: 0.42
+      xz_center: (0.5, 0.5)
+      y_range: (0.05, 0.95)

@@ -1,0 +1,28 @@
+type: AgentJetBot
+params:
+  collector_boundary:
+    type: cube
+    lower: (0.1, 0.1, 0.475)
+    upper: (0.9, 0.9, 0.525)
+effectors:
+  - type: Injector
+    params:
+      randomize_inject_v: False
+      radius: 0.015
+      flux: 4
+      init_pos: (0.5, 0.8, 0.5)
+      inject_v: (-3.0, 0.0, 0.0)
+      inject_p: (-0.07, 0.0, 0.0)
+      action_dim: 6
+      action_scale_p: (1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0, 5.0, 5.0, 5.0)
+    mesh:
+      file: jetbot.obj
+      pos: (0.0, 0.0, 0.016)
+      euler: (0.0, 0.0, 0.0)
+      scale: (0.15, 0.15, 0.15)
+      material: ROBOT
+    boundary:
+      type: cube
+      lower: (0.1, 0.1, 0.1)
+      upper: (0.9, 0.9, 0.9)

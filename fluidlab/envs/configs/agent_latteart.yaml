@@ -1,0 +1,23 @@
+type: AgentInjector
+effectors:
+  - type: Injector
+    params:
+      radius: 0.0075
+      flux: 2
+      init_pos: (0.5, 0.5, 0.5)
+      action_dim: 3
+      inject_v: (0.0, -3.0, 0.0)
+      action_scale_p: (1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0)
+      locally_random: True
+    mesh:
+      file: pitcher.obj
+      pos: (0.14, 0.03, 0.0)
+      euler: (90.0, -15.0, 90.0)
+      scale: (0.25, 0.25, 0.25)
+      material: POURER
+    boundary:
+      type: cylinder
+      xz_radius: 0.42
+      xz_center: (0.5, 0.5)
+      y_range: (0.65, 0.65)

@@ -1,0 +1,37 @@
+type: AgentIceCream
+params:
+  inject_till: 7700
+effectors:
+  - type: BallInjector
+    params:
+      locally_random: True
+      radius: 0.035
+      flux: 10
+      init_pos: (0.5, 0.8, 0.5)
+      inject_v: (0.0, -0.4, 0.0)
+      action_dim: 3
+      action_scale_p: (1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0)
+    boundary:
+      type: cube
+      lower: (0.05, 0.05, 0.05)
+      upper: (0.95, 0.95, 0.95)
+  - type: Rigid
+    params:
+      init_pos: (0.5, 0.5, 0.5)
+      init_euler: (0.0, 0.0, 0.0)
+      action_dim: 3
+      action_scale_p: (1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0)
+    mesh:
+      file: cone_tip.obj
+      file_vis: cone.obj
+      # file_vis: cone_tip.obj
+      scale: (0.726, 0.726, 0.726)
+      euler: (-90.0, 0.0, 30.0)
+      material: CONE
+      softness: 100.0
+    boundary:
+      type: cube
+      lower: (0.05, 0.05, 0.05)
+      upper: (0.95, 0.95, 0.95)

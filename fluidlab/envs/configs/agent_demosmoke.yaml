@@ -1,0 +1,13 @@
+type: AgentCirculation
+effectors:
+  - type: AirCon
+    params:
+      init_pos: (0.8, 0.8, 0.5)
+      action_dim: 8
+      action_scale_p: (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0)
+      action_scale_v: (1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 100000.0, 50.0)
+      inject_v: (0.707, 0.507, 0.807)
+    boundary:
+      type: cube
+      lower: (0.05, 0.05, 0.05)
+      upper: (0.95, 0.95, 0.95)
