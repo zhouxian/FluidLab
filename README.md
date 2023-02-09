@@ -1,11 +1,19 @@
 
 # FluidLab
 
-This repo contains FluidLab, a simulation platform containing both FluidEngine and a set of standardized fluid manipulation tasks proposed in the FluidLab ICLR 2023 submission. 
+This is the official repo of the FluidLab paper:
 
-Paper submission: https://openreview.net/forum?id=Cp-io_BoFaE&noteId=EE5yG3TBxS
+> **FluidLab: A Differentiable Environment for Benchmarking Complex Fluid Manipulation**  
+> Zhou Xian, Bo Zhu, Zhenjia Xu, Hsiao-Yu Tung, Antonio Torralba, Katerina Fragkiadaki, Chuang Gan  
+> *ICLR 2023 (Spotlight)*
 
-Project site: https://sites.google.com/view/fluidlab
+Paper: https://openreview.net/forum?id=Cp-io_BoFaE&noteId=EE5yG3TBxS  
+Project site (with more visualizations): https://sites.google.com/view/fluidlab
+
+This repo contains both FluidEngine and a set of standardized fluid manipulation tasks proposed in the FluidLab paper.
+
+**Note: this current version is released for rebuttal purposes. Stay tuned for the camera ready update which is supposed to be cleaner and with more detailed documentations.**
+
 
 ## Setting up environment
 Create conda env.
