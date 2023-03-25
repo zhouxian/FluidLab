@@ -15,7 +15,10 @@ This is the official repo of the paper:
 > **[FluidLab: A Differentiable Environment for Benchmarking Complex Fluid Manipulation](https://fluidlab2023.github.io/)**  
 > [Zhou Xian](https://zhou-xian.com/), [Bo Zhu](https://www.cs.dartmouth.edu/~bozhu/), [Zhenjia Xu](https://www.zhenjiaxu.com/), [Hsiao-Yu Tung](https://sfish0101.bitbucket.io/), [Antonio Torralba](https://groups.csail.mit.edu/vision/torralbalab/), [Katerina Fragkiadaki](https://www.cs.cmu.edu/~katef/), [Chuang Gan](https://people.csail.mit.edu/ganchuang/)   
 > *ICLR 2023 (Spotlight)*
-![](tasks.gif)
+
+<div>
+<img src='tasks.gif' width=90%>
+</div>
 
 This codebase contains the following:
 - **FluidEngine**, a multi-material fully-differentiable physics engine, supporting liquids, solids, and gasesous fluid simulation.
