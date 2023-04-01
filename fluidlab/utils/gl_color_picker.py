@@ -8,7 +8,7 @@ import numpy as np
 import taichi as ti
 from time import time
 from scipy import ndimage
-from fluidlab.engine.renderers.gl_renderer_src import flex_renderer
+from fluidlab.fluidengine.renderers.gl_renderer_src import flex_renderer
 
 import taichi as ti
 

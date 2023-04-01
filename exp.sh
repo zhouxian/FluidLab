@@ -1,4 +1,5 @@
-# generate goal for some envs
+# some tasks need a pre-generated goal.
+python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --record --renderer_type GGUI
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --record
 python fluidlab/run.py --cfg_file configs/exp_latteart_stir.yaml --record
 python fluidlab/run.py --cfg_file configs/exp_icecream.yaml --record

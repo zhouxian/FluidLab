@@ -6,8 +6,8 @@ from yacs.config import CfgNode
 from fluidlab.utils.misc import *
 from fluidlab.configs.macros import *
 from fluidlab.optimizer.policies import *
-from fluidlab.engine.taichi_env import TaichiEnv
-from fluidlab.engine.losses import *
+from fluidlab.fluidengine.taichi_env import TaichiEnv
+from fluidlab.fluidengine.losses import *
 
 class GatheringEnv(FluidEnv):
     def __init__(self, version, loss=True, loss_type='diff', seed=None):

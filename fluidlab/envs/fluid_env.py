@@ -3,14 +3,14 @@ import gym
 import numpy as np
 from gym.spaces import Box
 from fluidlab.configs.macros import *
-from fluidlab.engine.taichi_env import TaichiEnv
+from fluidlab.fluidengine.taichi_env import TaichiEnv
 import fluidlab.utils.misc as misc_utils
 
 class FluidEnv(gym.Env):
     '''
     Base env class.
     '''    
-    def __init__(self, version, loss=True, loss_type='diff', seed=None):
+    def __init__(self, version, loss=True, loss_type='diff', seed=None, renderer_type='GGUI'):
         if seed is not None:
             self.seed(seed)
 
@@ -21,6 +21,7 @@ class FluidEnv(gym.Env):
         self.loss                  = loss
         self.loss_type             = loss_type
         self.action_range          = np.array([-1.0, 1.0])
+        self.renderer_type              = renderer_type
 
         # create a taichi env
         self.taichi_env = TaichiEnv()

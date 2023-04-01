@@ -1,5 +1,7 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-setup(name='fluidlab',
-      version='0.0.1',
-      )
+setup(
+    name='fluidlab',
+    version='0.0.1',
+    packages=find_packages(include=['fluidlab']),
+)

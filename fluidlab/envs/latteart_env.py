@@ -6,11 +6,11 @@ from yacs.config import CfgNode
 from fluidlab.utils.misc import *
 from fluidlab.configs.macros import *
 from fluidlab.optimizer.policies import *
-from fluidlab.engine.taichi_env import TaichiEnv
-from fluidlab.engine.losses import LatteArtLoss
+from fluidlab.fluidengine.taichi_env import TaichiEnv
+from fluidlab.fluidengine.losses import LatteArtLoss
 
 class LatteArtEnv(FluidEnv):
-    def __init__(self, version, loss=True, loss_type='diff', seed=None):
+    def __init__(self, version, loss=True, loss_type='diff', seed=None, renderer_type='GGUI'):
 
         if seed is not None:
             self.seed(seed)
@@ -22,6 +22,7 @@ class LatteArtEnv(FluidEnv):
         self.loss                  = loss
         self.loss_type             = loss_type
         self.action_range          = np.array([-0.05, 0.05])
+        self.renderer_type         = renderer_type
 
         # create a taichi env
         self.taichi_env = TaichiEnv(
@@ -73,25 +74,28 @@ class LatteArtEnv(FluidEnv):
         )
 
     def setup_renderer(self):
-        # self.taichi_env.setup_renderer(
-        #     res=(960, 960),
-        #     camera_pos=(-0.15, 2.82, 2.5),
-        #     camera_lookat=(0.5, 0.5, 0.5),
-        #     fov=30,
-        #     lights=[{'pos': (0.5, 1.5, 0.5), 'color': (0.5, 0.5, 0.5)},
-        #             {'pos': (0.5, 1.5, 1.5), 'color': (0.5, 0.5, 0.5)}],
-        # )
-
-        self.taichi_env.setup_renderer(
-            type='GL',
-            render_particle=True,
-            camera_pos=(-0.15, 2.82, 2.5),
-            camera_lookat=(0.5, 0.5, 0.5),
-            fov=30,
-            light_pos=(3.5, 15.0, 0.55),
-            light_lookat=(0.5, 0.5, 0.49),
-            light_fov=20,
-        )
+        if self.renderer_type == 'GGUI':
+            self.taichi_env.setup_renderer(
+                res=(960, 960),
+                camera_pos=(-0.15, 2.82, 2.5),
+                camera_lookat=(0.5, 0.5, 0.5),
+                fov=30,
+                lights=[{'pos': (0.5, 1.5, 0.5), 'color': (0.5, 0.5, 0.5)},
+                        {'pos': (0.5, 1.5, 1.5), 'color': (0.5, 0.5, 0.5)}],
+            )
+        elif self.renderer_type == 'GL':
+            self.taichi_env.setup_renderer(
+                type='GL',
+                render_particle=True,
+                camera_pos=(-0.15, 2.82, 2.5),
+                camera_lookat=(0.5, 0.5, 0.5),
+                fov=30,
+                light_pos=(3.5, 15.0, 0.55),
+                light_lookat=(0.5, 0.5, 0.49),
+                light_fov=20,
+            )
+        else:
+            raise NotImplementedError
         
     def setup_loss(self):
         self.taichi_env.setup_loss(
@@ -106,34 +110,34 @@ class LatteArtEnv(FluidEnv):
             
         return self.taichi_env.render(mode)
         
-    def demo_policy(self):
-        init_p = np.array([0.5, 0.73, 0.5])
-        comp_actions_p = init_p
-        return MousePolicy_vxz(init_p)
+    def demo_policy(self, user_input=False):
+        if user_input:
+            init_p = np.array([0.5, 0.73, 0.5])
+            comp_actions_p = init_p
+            return MousePolicy_vxz(init_p)
+        else:
+            comp_actions_p = np.zeros((1, self.agent.action_dim))
+            comp_actions_v = np.zeros((self.horizon_action, self.agent.action_dim))
+            init_p = np.array([0.15, 0.65, 0.5])
+            x_range = 0.7
+            current_p = np.array(init_p)
+            amp_range = np.array([0.15, 0.25])
+            for i in range(self.horizon_action):
+                target_i = i + 1
+                target_x = init_p[0] + target_i/self.horizon_action*x_range
+                target_y = init_p[1]
+                cycles = 3
+                target_rad = target_i/self.horizon_action*(np.pi*2)*cycles
+                target_amp = amp_range[1] - np.abs((target_i*2/self.horizon_action) - 1) * (amp_range[1] - amp_range[0])
+                target_z = np.sin(target_rad)*target_amp+0.5
+                target_p = np.array([target_x, target_y, target_z])
 
-    # def demo_policy(self):
-    #     comp_actions_p = np.zeros((1, self.agent.action_dim))
-    #     comp_actions_v = np.zeros((self.horizon_action, self.agent.action_dim))
-    #     init_p = np.array([0.15, 0.65, 0.5])
-    #     x_range = 0.7
-    #     current_p = np.array(init_p)
-    #     amp_range = np.array([0.15, 0.25])
-    #     for i in range(self.horizon_action):
-    #         target_i = i + 1
-    #         target_x = init_p[0] + target_i/self.horizon_action*x_range
-    #         target_y = init_p[1]
-    #         cycles = 3
-    #         target_rad = target_i/self.horizon_action*(np.pi*2)*cycles
-    #         target_amp = amp_range[1] - np.abs((target_i*2/self.horizon_action) - 1) * (amp_range[1] - amp_range[0])
-    #         target_z = np.sin(target_rad)*target_amp+0.5
-    #         target_p = np.array([target_x, target_y, target_z])
+                comp_actions_v[i] = target_p - current_p
+                current_p += comp_actions_v[i]
 
-    #         comp_actions_v[i] = target_p - current_p
-    #         current_p += comp_actions_v[i]
-
-    #     comp_actions_p[0] = init_p
-    #     comp_actions = np.vstack([comp_actions_v, comp_actions_p])
-    #     return ActionsPolicy(comp_actions)
+            comp_actions_p[0] = init_p
+            comp_actions = np.vstack([comp_actions_v, comp_actions_p])
+            return ActionsPolicy(comp_actions)
 
     def trainable_policy(self, optim_cfg, init_range):
         return LatteArtPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range)

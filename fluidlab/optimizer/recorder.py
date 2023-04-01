@@ -12,8 +12,8 @@ class Recorder:
         if self.target_file is not None:
             os.makedirs(os.path.dirname(self.target_file), exist_ok=True)
 
-    def record(self):
-        policy = self.env.demo_policy()
+    def record(self, user_input=False):
+        policy = self.env.demo_policy(user_input)
         taichi_env = self.env.taichi_env
 
         # initialize ...
@@ -31,7 +31,6 @@ class Recorder:
             taichi_env.apply_agent_action_p(action_p)
         
         save = False
-        save = True
         if save:
             os.makedirs(f'tmp/recorder', exist_ok=True)
             
@@ -40,7 +39,6 @@ class Recorder:
                 action = policy.get_action_v(i)
             else:
                 action = None
-            # print(action)
             taichi_env.step(action)
 
             # get state
@@ -57,35 +55,23 @@ class Recorder:
                 if not is_on_server():
                     taichi_env.render('human')
 
-        # while True:
-        #     taichi_env.render()
-
         if self.target_file is not None:
             target['mat'] = taichi_env.simulator.particles_i.mat.to_numpy()
             if os.path.exists(self.target_file):
                 os.remove(self.target_file)
             pkl.dump(target, open(self.target_file, 'wb'))
-            print(f'==========> New target generated and dumped to {self.target_file}.')
+            print(f'===> New target generated and dumped to {self.target_file}.')
 
-    def replay_traj(self):
+    def replay_target(self):
         taichi_env = self.env.taichi_env
         target = pkl.load(open(self.target_file, 'rb'))
 
-        save = False
-        save = True
-        if save:
-            os.makedirs(f'tmp/replay', exist_ok=True)
-            
         for i in range(self.env.horizon):
             taichi_env.simulator.set_x(0, target['x'][i])
             taichi_env.simulator.set_used(0, target['used'][i])
 
-            if save:
-                img = taichi_env.render('rgb_array')
-                cv2.imwrite(f'tmp/replay/{i:04d}.png', img[:, :, ::-1])
-            else:
-                if not is_on_server():
-                    taichi_env.render('human')
+            if not is_on_server():
+                taichi_env.render('human')
 
     def replay_policy(self, policy_path):
         taichi_env = self.env.taichi_env
@@ -95,7 +81,7 @@ class Recorder:
         taichi_env.apply_agent_action_p(policy.get_actions_p())
 
         save = False
-        save = True
+        # save = True
         if save:
             os.makedirs(f'tmp/replay', exist_ok=True)
             
@@ -114,12 +100,20 @@ class Recorder:
                     taichi_env.render('human')
 
 
-def record_target(env, record, replay, path=None):
+def record_target(env, path=None, user_input=False):
     env.reset()
 
     recorder = Recorder(env)
-    if record:
-        recorder.record()
-    elif replay:
-        recorder.replay_policy(path)
-        # recorder.replay_traj()
+    recorder.record(user_input)
+
+def replay_target(env):
+    env.reset()
+
+    recorder = Recorder(env)
+    recorder.replay_target()
+
+def replay_policy(env, path=None):
+    env.reset()
+
+    recorder = Recorder(env)
+    recorder.replay_policy(path)

@@ -26,8 +26,6 @@ def is_on_server():
     hostname = socket.gethostname()
     if 'matrix' in hostname:
         return True
-    # elif 'crv' in hostname:
-    #     return True
     else:
         return False
 

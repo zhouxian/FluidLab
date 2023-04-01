@@ -4,7 +4,7 @@ import numpy as np
 import taichi as ti
 from fluidlab.utils.misc import is_on_server
 
-from fluidlab.engine.taichi_env import TaichiEnv
+from fluidlab.fluidengine.taichi_env import TaichiEnv
 
 
 class Solver:
@@ -62,7 +62,6 @@ class Solver:
             self.logger.save_policy(policy, iteration)
             # if iteration % 10 == 0:
             #     self.render_policy(taichi_env, taichi_env_state, policy, self.env.horizon, self.env.horizon_action, iteration)
-            # central_diff(taichi_env_state['state'], policy, self.env.horizon, self.env.horizon_action)
             loss_info, grad = forward_backward(taichi_env_state['state'], policy, self.env.horizon, self.env.horizon_action)
             loss = loss_info['loss']
             loss_info['iteration'] = iteration
