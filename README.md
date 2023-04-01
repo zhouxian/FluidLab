@@ -27,34 +27,36 @@ This codebase contains the following:
   - [Setting up environment](#setting-up-environment)
   - [Rendering](#rendering)
 - [Let's Rock!](#lets-rock)
-  - [Example: LatteArtEnv](#example-latteartenv)
+  - [Generate goal](#generate-goal)
+  - [Solve](#trajectory-optimization-with-differentiable-physics)
+  - [Replay](#replay-optimized-trajectory)
 ## Installation
 ### Setting up environment
-1. Clone git repo.
+Clone git repo.
 ```
 git clone https://github.com/zhouxian/FluidLab.git
 ```
-2. Create an conda environment.
+We recommend working with a conda environment.
 ```
 conda env create -f environment.yml
 conda activate fluidlab
 ```
 If installing from this yaml file doesn't work, manual installation missing packages should also work.
 
-3. Install FluidLab.
+Finally, install FluidLab.
 ```
 cd FluidLab/
 pip install -e .
 ```
 
 ### Rendering
-FluidLab comes with two different rendering choices:
+FluidLab comes with two different rendering choices: GGUIRenderer and GLRenderer.
 
-#### GGUIRenderer
+#### 1. GGUIRenderer
 GGUIRenderer (`fluidlab/fluidengine/renderers/ggui_renderer.py`) is based on Taichi's own UI system: [GGUI](https://docs.taichi-lang.org/docs/ggui).
 GGUIRenderer is fast and the recommended way for quick visualization and prototyping.
 
-#### GLRenderer
+#### 2. GLRenderer
 GLRenderer (`fluidlab/fluidengine/renderers/ggui_renderer.py`) is an OpenGL-based GPU-acelerated rendering pipeline. It produces much better visual effects.
 
 GLRenderer is slower than GGUIRenderer: while the rendering itself is pretty fast, the major bottleneck occurs in GPU-CPU-GPU data transfer from simulation to the renderer. We are currently working on addressing this.
@@ -67,7 +69,7 @@ First, install docker-ce and nvidia-docker following the official steps:
 - https://docs.docker.com/engine/install/ubuntu/
 - https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html#docker
 
-Compile GLRenderer using our provided docker file:
+Compile GLRenderer using our provided docker file. (Assuming you are using anaconda3)
 
 ```
 sudo docker build -t fluidlab-glrenderer fluidlab/fluidengine/renderers/gl_renderer_src
@@ -79,7 +81,7 @@ sudo nvidia-docker run \
   -e QT_X11_NO_MITSHM=1 \
   -it fluidlab-glrenderer:latest bash
 
-. /home/zhouxian/anaconda3/bin/activate fluidlab
+. /home/{username}/anaconda3/bin/activate fluidlab
 . prepare.sh
 . compile.sh
 ```
@@ -90,9 +92,8 @@ If you see the following console output, the compilation is successful, and you 
 ```
 
 ## Let's Rock!
-### Example: LatteArtEnv
+### Generate goal
 Let's start with the Latte Art (Pouring) task as a concrete example.
-#### Generate goal
 First, we need to generate a goal pattern. We provided a hard-coded sinewave pattern by default:
 ```
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --record
@@ -113,14 +114,14 @@ Once a target is generated, you can replay it:
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --replay_target
 ```
 
-#### Trajectory optimization with differentiable physics
+### Trajectory optimization with differentiable physics
 Now that we have the goal, we will optimize a trajectory using gradients provided by the differentiable simulation.
 ```
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --exp_name exp_latteart
 ```
 Optimized trajectories will be saved under ```logs/policies/{exp_name}```.
 
-#### Replay optimized trajectory
+### Replay optimized trajectory
 ```
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --replay_policy --path logs/policies/exp_latteart/0100.pkl
 ```
