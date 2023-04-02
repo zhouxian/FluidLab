@@ -1,6 +1,6 @@
 EXP:
   seed: 0
-  env_name: 'IceCreamSimple-v0'
+  env_name: 'IceCreamStatic-v0'
 SOLVER:
   n_iters: 1000
   init_range: 

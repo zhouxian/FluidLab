@@ -24,14 +24,14 @@ This codebase contains the following:
 
 ## Table of Contents
 - [Installation](#installation)
-  - [Setting up environment](#setting-up-environment)
+  - [Basic environment](#basic-environment)
   - [Rendering](#rendering)
 - [Let's Rock!](#lets-rock)
   - [Generate goal](#generate-goal)
   - [Solve](#trajectory-optimization-with-differentiable-physics)
   - [Replay](#replay-optimized-trajectory)
 ## Installation
-### Setting up environment
+### Basic environment
 Clone git repo.
 ```
 git clone https://github.com/zhouxian/FluidLab.git

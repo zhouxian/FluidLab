@@ -11,24 +11,24 @@ import matplotlib.pyplot as plt
 from .shapematching_loss import ShapeMatchingLoss
 
 @ti.data_oriented
-class IceCreamSimpleLoss(ShapeMatchingLoss):
+class IceCreamStaticLoss(ShapeMatchingLoss):
     def __init__(self, type, **kwargs):
         if type == 'diff':
-            super(IceCreamSimpleLoss, self).__init__(
+            super().__init__(
                 matching_mat=ICECREAM1,
                 temporal_init_range_end=100,
                 temporal_range_type='expand',
                 **kwargs
             )
         elif type == 'default':
-            super(IceCreamSimpleLoss, self).__init__(
+            super().__init__(
                 matching_mat        = ICECREAM1,
                 temporal_range_type = 'all',
                 **kwargs
             )
         
     def build(self, sim):
-        super(IceCreamSimpleLoss, self).build(sim)
+        super().build(sim)
 
     def get_step_loss(self):
         cur_step_loss = self.step_loss[self.sim.cur_step_global-1]
@@ -40,6 +40,18 @@ class IceCreamSimpleLoss(ShapeMatchingLoss):
         loss_info['loss'] = loss
         return loss_info
         
+    def get_final_loss(self):
+        self.compute_total_loss_kernel(self.temporal_range[0], self.temporal_range[1])
+        self.expand_temporal_range()
+        loss_info = {
+            'loss': self.total_loss[None],
+            'last_step_loss': self.step_loss[self.max_loss_steps-1],
+            'temporal_range': self.temporal_range[1],
+            'reward': np.sum((750 - self.step_loss.to_numpy()) * 0.001)
+        }
+
+        return loss_info
+
     def expand_temporal_range(self):
         if self.temporal_range_type == 'expand':
             loss_improved = (self.best_loss - self.total_loss[None])

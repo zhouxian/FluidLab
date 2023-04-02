@@ -7,21 +7,22 @@ from fluidlab.utils.misc import *
 from fluidlab.configs.macros import *
 from fluidlab.optimizer.policies import *
 from fluidlab.fluidengine.taichi_env import TaichiEnv
-from fluidlab.fluidengine.losses import IceCreamSimpleLoss
+from fluidlab.fluidengine.losses import IceCreamStaticLoss
 
-class IceCreamSimpleEnv(FluidEnv):
-    def __init__(self, version, loss=True, loss_type='diff', seed=None):
+class IceCreamStaticEnv(FluidEnv):
+    def __init__(self, version, loss=True, loss_type='diff', seed=None, renderer_type='GGUI'):
 
         if seed is not None:
             self.seed(seed)
 
-        self.horizon               = 600
+        self.horizon               = 550
         self.horizon_action        = 550
-        self.target_file           = get_tgt_path('IceCreamSimple-v0.pkl')
+        self.target_file           = get_tgt_path('IceCreamStatic-v0.pkl')
         self._n_obs_ptcls_per_body = 2000
         self.loss                  = loss
         self.loss_type             = loss_type
         self.action_range          = np.array([-0.005, 0.005])
+        self.renderer_type         = renderer_type
 
         # create a taichi env
         self.taichi_env = TaichiEnv(
@@ -36,7 +37,7 @@ class IceCreamSimpleEnv(FluidEnv):
 
     def setup_agent(self):
         agent_cfg = CfgNode(new_allowed=True)
-        agent_cfg.merge_from_file(get_cfg_path('agent_icecreamsimple.yaml'))
+        agent_cfg.merge_from_file(get_cfg_path('agent_icecreamstatic.yaml'))
         self.taichi_env.setup_agent(agent_cfg)
         self.agent = self.taichi_env.agent
 
@@ -65,39 +66,45 @@ class IceCreamSimpleEnv(FluidEnv):
         )
 
     def setup_renderer(self):
-        # self.taichi_env.setup_renderer(
-        #     camera_pos=(4.48, 2.41, -0.84),
-        #     camera_lookat=(3.64, 1.95, -0.56),
-        #     fov=15,
-        #     lights=[{'pos': (0.5, 3.5, 3.5), 'color': (0.5, 0.5, 0.5)},
-        #             {'pos': (0.5, 0.5, 3.5), 'color': (0.35, 0.35, 0.35)},
-        #             {'pos': (-5.0, 1.5, 0.5), 'color': (0.35, 0.35, 0.35)},
-        #             {'pos': (5.0, 1.5, 0.5), 'color': (0.5, 0.5, 0.5)}],
-        # )
+        if self.renderer_type == 'GGUI':
+            self.taichi_env.setup_renderer(
+                camera_pos=(4.48, 2.41, -0.84),
+                camera_lookat=(3.64, 1.95, -0.56),
+                fov=15,
+                lights=[{'pos': (0.5, 3.5, 3.5), 'color': (0.5, 0.5, 0.5)},
+                        {'pos': (0.5, 0.5, 3.5), 'color': (0.35, 0.35, 0.35)},
+                        {'pos': (-5.0, 1.5, 0.5), 'color': (0.35, 0.35, 0.35)},
+                        {'pos': (5.0, 1.5, 0.5), 'color': (0.5, 0.5, 0.5)}],
+            )
+        elif self.renderer_type == 'GL':
+            self.taichi_env.setup_renderer(
+                type='GL',
+                camera_pos=(4.48, 2.41, -0.84),
+                camera_lookat=(3.64, 1.95, -0.56),
+                fov=18,
+                light_pos=(0.5, 10.0, 5.55),
+                light_lookat=(0.5, 0.5, 0.49),
+                light_fov=60,
+                floor_height=-0.5,
+                camera_far=20,
+            )
+        else:
+            raise NotImplementedError
 
-        self.taichi_env.setup_renderer(
-            type='GL',
-            # render_particle=True,
-            camera_pos=(4.48, 2.41, -0.84),
-            camera_lookat=(3.64, 1.95, -0.56),
-            fov=18,
-            light_pos=(0.5, 10.0, 5.55),
-            light_lookat=(0.5, 0.5, 0.49),
-            light_fov=60,
-            floor_height=-0.5,
-            camera_far=20,
-        )
 
     def setup_loss(self):
         self.taichi_env.setup_loss(
-            loss_cls=IceCreamSimpleLoss,
+            loss_cls=IceCreamStaticLoss,
             target_file=self.target_file,
             type=self.loss_type,
             weights={'chamfer': 1.0}
         )
 
 
-    def demo_policy(self):
+    def demo_policy(self, user_input=False):
+        if user_input:
+            raise NotImplementedError
+
         comp_actions_p = np.zeros((1, self.agent.action_dim))
         comp_actions_v = np.zeros((self.horizon_action, self.agent.action_dim))
         init_center = np.array([0.5, 0.36, 0.5])
@@ -133,4 +140,4 @@ class IceCreamSimpleEnv(FluidEnv):
         return ActionsPolicy(comp_actions)
         
     def trainable_policy(self, optim_cfg, init_range):
-        return IceCreamSimplePolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=None)
+        return IceCreamStaticPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=None)

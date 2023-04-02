@@ -60,8 +60,8 @@ class Solver:
 
         for iteration in range(self.cfg.n_iters):
             self.logger.save_policy(policy, iteration)
-            # if iteration % 10 == 0:
-            #     self.render_policy(taichi_env, taichi_env_state, policy, self.env.horizon, self.env.horizon_action, iteration)
+            if iteration % 10 == 0:
+                self.render_policy(taichi_env, taichi_env_state, policy, self.env.horizon, self.env.horizon_action, iteration)
             loss_info, grad = forward_backward(taichi_env_state['state'], policy, self.env.horizon, self.env.horizon_action)
             loss = loss_info['loss']
             loss_info['iteration'] = iteration

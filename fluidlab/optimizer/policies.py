@@ -200,18 +200,20 @@ class IceCreamPolicy(TrainablePolicy):
         self.trainable[169:-1] = True
 
 
-class IceCreamSimplePolicy(TrainablePolicy):
+class IceCreamStaticPolicy(TrainablePolicy):
     def __init__(self, *args, **kwargs):
-        super(IceCreamSimplePolicy, self).__init__(*args, **kwargs)
+        super(IceCreamStaticPolicy, self).__init__(*args, **kwargs)
         self.trainable = np.full(self.comp_actions_shape[0], False)
         self.trainable[:-1] = True
 
     def optimize(self, grads, loss_info):
         grads = grads.clip(-1e5, 1e5)
-        super(IceCreamSimplePolicy, self).optimize(grads, loss_info)
+        super(IceCreamStaticPolicy, self).optimize(grads, loss_info)
 
-        # self.optim.lr = self.optim.init_lr * 0.5
-        # print(f'lr reduced to {self.optim.lr}')
+        if loss_info['temporal_range'] > 450:
+            self.optim.lr = self.optim.init_lr * 0.1
+            print(f'lr reduced to {self.optim.lr}')
+
 
 
 class GatheringPolicy(TrainablePolicy):

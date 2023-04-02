@@ -2,7 +2,7 @@ from .loss import Loss
 from .rltest_loss import *
 from .latteart_loss import *
 from .icecream_loss import *
-from .icecreamsimple_loss import *
+from .icecreamstatic_loss import *
 from .latteartstir_loss import *
 from .gathering_loss import *
 from .gatheringO_loss import *
