@@ -73,7 +73,8 @@ Compile GLRenderer using our provided docker file. (Assuming you are using anaco
 
 ```
 sudo docker build -t fluidlab-glrenderer fluidlab/fluidengine/renderers/gl_renderer_src
-sudo nvidia-docker run \
+
+sudo docker run \
   -v ${PWD}/fluidlab/fluidengine/renderers/gl_renderer_src:/workspace \
   -v /home/{username}/anaconda3:/home/{username}/anaconda3 \
   --gpus all \
