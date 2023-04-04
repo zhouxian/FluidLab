@@ -16,7 +16,7 @@ class IceCreamStaticEnv(FluidEnv):
             self.seed(seed)
 
         self.horizon               = 550
-        self.horizon_action        = 550
+        self.horizon_action        = 500
         self.target_file           = get_tgt_path('IceCreamStatic-v0.pkl')
         self._n_obs_ptcls_per_body = 2000
         self.loss                  = loss

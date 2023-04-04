@@ -32,7 +32,7 @@ class IceCreamStaticLoss(ShapeMatchingLoss):
 
     def get_step_loss(self):
         cur_step_loss = self.step_loss[self.sim.cur_step_global-1]
-        reward = 0.001 * (750 - cur_step_loss)
+        reward = 0.001 * (900 - cur_step_loss)
         loss = cur_step_loss
 
         loss_info = {}
@@ -47,7 +47,7 @@ class IceCreamStaticLoss(ShapeMatchingLoss):
             'loss': self.total_loss[None],
             'last_step_loss': self.step_loss[self.max_loss_steps-1],
             'temporal_range': self.temporal_range[1],
-            'reward': np.sum((750 - self.step_loss.to_numpy()) * 0.001)
+            'reward': np.sum((900 - self.step_loss.to_numpy()) * 0.001)
         }
 
         return loss_info

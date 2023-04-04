@@ -215,7 +215,6 @@ class IceCreamStaticPolicy(TrainablePolicy):
             print(f'lr reduced to {self.optim.lr}')
 
 
-
 class GatheringPolicy(TrainablePolicy):
     def __init__(self, *args, **kwargs):
         super(GatheringPolicy, self).__init__(*args, **kwargs)
