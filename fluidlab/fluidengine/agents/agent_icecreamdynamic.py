@@ -5,14 +5,14 @@ from .agent import Agent
 from fluidlab.fluidengine.effectors import *
 
 @ti.data_oriented
-class AgentIceCream(Agent):
+class AgentIceCreamDynamic(Agent):
     # Agent for icecream env, with one static Injector and one controllable Rigid
     def __init__(self, inject_till=0, **kwargs):
-        super(AgentIceCream, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self.inject_till = inject_till
 
     def build(self, sim):
-        super(AgentIceCream, self).build(sim)
+        super().build(sim)
 
         assert self.n_effectors == 2
         assert isinstance(self.effectors[0], Injector)

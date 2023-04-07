@@ -120,6 +120,3 @@ class LatteArtStirEnv(FluidEnv):
 
     def trainable_policy(self, optim_cfg, init_range):
         return LatteArtStirPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=[1])
-
-    def cmaes_policy(self, init_range):
-        return LatteArtStirCMAESPolicy(init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=[1])

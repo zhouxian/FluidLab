@@ -1,7 +1,7 @@
 import gym
 from gym import register
 
-for env_name in ['LatteArt', 'LatteArtStir', 'Scooping', 'Gathering', 'GatheringO', 'IceCream', 'IceCreamStatic', 'Transporting', 'Stabilizing', 'Pouring', 'Circulation', 'Mixing']:
+for env_name in ['LatteArt', 'LatteArtStir', 'Scooping', 'Gathering', 'GatheringO', 'IceCreamDynamic', 'IceCreamStatic', 'Transporting', 'Stabilizing', 'Pouring', 'Circulation', 'Mixing']:
     for id in range(1):
         register(
             id = f'{env_name}-v{id}',

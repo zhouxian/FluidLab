@@ -1,8 +1,8 @@
 EXP:
   seed: 0
-  env_name: 'IceCream-v0'
+  env_name: 'IceCreamDynamic-v0'
 SOLVER:
-  n_iters: 1000
+  n_iters: 5000
   init_range: 
     v: ((0.0, 0.0, 0.0), (0.0, 0.0, 0.0))
     p: ((0.35, 0.3, 0.5), (0.35, 0.3, 0.5))

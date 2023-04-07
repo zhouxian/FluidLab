@@ -141,6 +141,3 @@ class LatteArtEnv(FluidEnv):
 
     def trainable_policy(self, optim_cfg, init_range):
         return LatteArtPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range)
-
-    def cmaes_policy(self, init_range):
-        return LatteArtCMAESPolicy(init_range, self.agent.action_dim, self.horizon_action, self.action_range)

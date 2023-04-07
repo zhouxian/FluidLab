@@ -128,6 +128,3 @@ class GatheringOEnv(FluidEnv):
 
     def trainable_policy(self, optim_cfg, init_range):
         return GatheringOPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=[1, 2])
-
-    def cmaes_policy(self, init_range):
-        return GatheringOCMAESPolicy(init_range, self.agent.action_dim, self.horizon_action, self.action_range, fix_dim=[1, 2])

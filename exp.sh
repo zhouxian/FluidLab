@@ -1,14 +1,14 @@
 # some tasks need a pre-generated goal.
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --record
 python fluidlab/run.py --cfg_file configs/exp_icecream_static.yaml --record
+python fluidlab/run.py --cfg_file configs/exp_icecream_dynamic.yaml --record
 python fluidlab/run.py --cfg_file configs/exp_latteart_stir.yaml --record
-python fluidlab/run.py --cfg_file configs/exp_icecream.yaml --record
 
 # solve
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --exp_name exp_latteart
 python fluidlab/run.py --cfg_file configs/exp_icecream_static.yaml --exp_name exp_icecream_static
+python fluidlab/run.py --cfg_file configs/exp_icecream_dynamic.yaml --exp_name exp_icecream_dynamic
 python fluidlab/run.py --cfg_file configs/exp_latteart_stir.yaml --exp_name exp_latteart_stir
-python fluidlab/run.py --cfg_file configs/exp_icecream.yaml --exp_name exp_icecream
 python fluidlab/run.py --cfg_file configs/exp_gathering.yaml --exp_name exp_gathering
 python fluidlab/run.py --cfg_file configs/exp_gatheringO.yaml --exp_name exp_gatheringO
 python fluidlab/run.py --cfg_file configs/exp_circulation.yaml --exp_name exp_circulation

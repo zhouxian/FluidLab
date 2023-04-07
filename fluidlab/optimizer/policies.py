@@ -192,9 +192,9 @@ class LatteArtStirPolicy(TrainablePolicy):
                 break
 
 
-class IceCreamPolicy(TrainablePolicy):
+class IceCreamDynamicPolicy(TrainablePolicy):
     def __init__(self, *args, **kwargs):
-        super(IceCreamPolicy, self).__init__(*args, **kwargs)
+        super(IceCreamDynamicPolicy, self).__init__(*args, **kwargs)
 
         self.trainable = np.full(self.comp_actions_shape[0], False)
         self.trainable[169:-1] = True

@@ -1,4 +1,4 @@
-type: AgentIceCream
+type: AgentIceCreamDynamic
 params:
   inject_till: 7700
 effectors:
