@@ -126,3 +126,6 @@ Optimized trajectories will be saved under ```logs/policies/{exp_name}```.
 ```
 python fluidlab/run.py --cfg_file configs/exp_latteart.yaml --replay_policy --path logs/policies/exp_latteart/0100.pkl
 ```
+
+### Misc
+If you would like to use GLRenderer for liquid, remember to modify the opacity value of the corresponding material in `macro.py`. For example, the last element in `COLOR[WATER]` should be set to `0.0`.

@@ -13,7 +13,7 @@ import fluidlab.utils.misc as misc_utils
 
 class GLRenderer:
     def __init__(self, 
-        res             = (1280, 1280),
+        res             = (640, 640),
         camera_pos      = (0.5, 2.5, 3.5),
         camera_lookat   = (0.5, 0.5, 0.5),
         camera_near     = 0.1,

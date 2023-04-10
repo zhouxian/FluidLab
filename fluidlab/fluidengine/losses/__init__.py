@@ -4,7 +4,7 @@ from .latteart_loss import *
 from .icecreamdynamic_loss import *
 from .icecreamstatic_loss import *
 from .latteartstir_loss import *
-from .gathering_loss import *
+from .gatheringeasy_loss import *
 from .gatheringO_loss import *
 from .circulation_loss import *
 from .pouring_loss import *

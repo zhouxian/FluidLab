@@ -1,6 +1,6 @@
 EXP:
   seed: 0
-  env_name: 'Gathering-v0'
+  env_name: 'GatheringEasy-v0'
 SOLVER:
   n_iters: 500
   init_range: 

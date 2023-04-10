@@ -11,14 +11,14 @@ import matplotlib.pyplot as plt
 from .loss import Loss
 
 @ti.data_oriented
-class GatheringLoss(Loss):
+class GatheringEasyLoss(Loss):
     def __init__(
             self,
             type,
             matching_mat,
             **kwargs,
         ):
-        super(GatheringLoss, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         self.matching_mat = matching_mat
         
@@ -47,10 +47,10 @@ class GatheringLoss(Loss):
             self.best_loss = self.inf
             self.plateau_count = 0
 
-        super(GatheringLoss, self).build(sim)
+        super().build(sim)
 
     def reset_grad(self):
-        super(GatheringLoss, self).reset_grad()
+        super().reset_grad()
         self.dist_loss.grad.fill(0)
         
     @ti.kernel
@@ -87,18 +87,6 @@ class GatheringLoss(Loss):
         for s in range(s_start, s_end):
             self.total_loss[None] += self.step_loss[s]
 
-    def get_final_loss(self):
-        self.compute_total_loss_kernel(self.temporal_range[0], self.temporal_range[1])
-        self.expand_temporal_range()
-        
-        loss_info = {
-            'loss': self.total_loss[None],
-            'last_step_loss': self.step_loss[self.max_loss_steps-1],
-            'temporal_range': self.temporal_range[1],
-        }
-
-        return loss_info
-
     def get_final_loss_grad(self):
         self.compute_total_loss_kernel.grad(self.temporal_range[0], self.temporal_range[1])
 
@@ -130,4 +118,17 @@ class GatheringLoss(Loss):
         loss_info = {}
         loss_info['reward'] = reward
         loss_info['loss'] = loss
+        return loss_info
+
+    def get_final_loss(self):
+        self.compute_total_loss_kernel(self.temporal_range[0], self.temporal_range[1])
+        self.expand_temporal_range()
+        
+        loss_info = {
+            'loss': self.total_loss[None],
+            'last_step_loss': self.step_loss[self.max_loss_steps-1],
+            'temporal_range': self.temporal_range[1],
+            'reward': np.sum((150 - self.step_loss.to_numpy()) * 0.01)
+        }
+
         return loss_info

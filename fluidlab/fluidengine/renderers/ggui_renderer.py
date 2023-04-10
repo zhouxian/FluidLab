@@ -10,7 +10,7 @@ from fluidlab.configs.macros import *
 @ti.data_oriented
 class GGUIRenderer:
     def __init__(self, 
-        res=(1280, 1280),
+        res=(640, 640),
         camera_pos=(0.5, 2.5, 3.5),
         camera_lookat=(0.5, 0.5, 0.5),
         fov=30,
@@ -58,30 +58,6 @@ class GGUIRenderer:
         self.sim = sim
         self.particles_color = ti.Vector.field(4, ti.f32, shape=(len(particles['color']),))
         self.particles_color.from_numpy(particles['color'].astype(np.float32))
-
-
-        self.detector_array_N = 15
-        self.detector_array = ti.Vector.field(3, dtype=ti.f32, shape=(self.detector_array_N,))
-        self.detector_h = 72
-        self.detector_array.from_numpy(np.array([
-            [25, self.detector_h, 85],
-            [35, self.detector_h, 85],
-            [15, self.detector_h, 85],
-            [25, self.detector_h, 75],
-            [25, self.detector_h, 95],
-
-            [25, self.detector_h, 42],
-            [35, self.detector_h, 42],
-            [15, self.detector_h, 42],
-            [25, self.detector_h, 32],
-            [25, self.detector_h, 52],
-
-            [107, self.detector_h, 65],
-            [115, self.detector_h, 65],
-            [99, self.detector_h, 65],
-            [107, self.detector_h, 45],
-            [107, self.detector_h, 85],
-        ], dtype=np.float32)/128.0)
 
         for i in range(200):
             self.frames[0][i] = ti.Vector([0., 0., 0.]) + i/200 * ti.Vector([1., 0., 0.])
@@ -200,8 +176,6 @@ class GGUIRenderer:
                 if effector.mesh is not None:
                     self.scene.mesh(effector.mesh.vertices, effector.mesh.faces, per_vertex_color=effector.mesh.colors)
                 # self.scene.particles(effector.latest_pos, color=COLOR[EFFECTOR], radius=self.particle_radius*2)
-
-        # self.scene.particles(self.detector_array, color=(1.0, 0.0, 0.0), radius=self.particle_radius*2)
 
         # smoke
         if self.sim.smoke_field is not None:
