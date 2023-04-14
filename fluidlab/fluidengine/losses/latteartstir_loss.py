@@ -85,6 +85,7 @@ class LatteArtStirLoss(ShapeMatchingLoss):
             'loss_milk': self.total_loss_milk[None],
             'last_step_loss': self.step_loss[self.max_loss_steps-1],
             'temporal_range': self.temporal_range[1],
+            'reward': np.sum((1000 - self.step_loss.to_numpy()) * 0.002)
         }
 
         return loss_info
