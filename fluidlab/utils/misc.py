@@ -23,11 +23,13 @@ def eval_str(x):
     else:
         return x
 def is_on_server():
-    hostname = socket.gethostname()
-    if 'matrix' in hostname:
-        return True
-    else:
-        return False
+    # hostname = socket.gethostname()
+    # if 'matrix' in hostname:
+    #     return True
+    # else:
+    #     return False
+    # We will always be running this on a server.
+    return True
 
 def alpha_to_transparency(color):
     return np.array([color[0], color[1], color[2], 1.0 - color[3]])
