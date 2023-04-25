@@ -5,13 +5,14 @@ from fluidlab.fluidengine.simulators import MPMSimulator, SmokeField
 from fluidlab.fluidengine.agents import *
 from fluidlab.fluidengine.meshes import Statics
 from fluidlab.fluidengine.renderers import *
+from fluidlab.fluidengine.renderers import GGUIRenderer
 from fluidlab.fluidengine.bodies import Bodies
 from fluidlab.configs.macros import *
 from fluidlab.utils.misc import *
 
-ti.init(arch=ti.gpu, device_memory_GB=8, packed=True)
+# ti.init(arch=ti.gpu, device_memory_GB=1, packed=True)
 # ti.init(arch=ti.gpu, device_memory_GB=10, packed=True)
-# ti.init(arch=ti.gpu, device_memory_GB=10, packed=True, debug=True)
+ti.init(arch=ti.gpu, device_memory_GB=10, packed=True, debug=True)
 
 @ti.data_oriented
 class TaichiEnv:
@@ -52,8 +53,7 @@ class TaichiEnv:
         self.particle_bodies = Bodies(dim=self.dim, particle_density=self.particle_density)
         self.renderer        = None
         self.loss            = None
-        self.smoke_field     = None
-
+        self.smoke_field     = None        
         print('===>  TaichiEnv created.')
 
     def setup_agent(self, agent_cfg):

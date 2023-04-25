@@ -30,9 +30,9 @@ class Recorder:
         if action_p is not None:
             taichi_env.apply_agent_action_p(action_p)
         
-        save = False
+        save = True
         if save:
-            os.makedirs(f'tmp/recorder', exist_ok=True)
+            os.makedirs(f'./tmp/recorder', exist_ok=True)
             
         for i in range(self.env.horizon):
             if i < self.env.horizon_action:
@@ -50,7 +50,7 @@ class Recorder:
 
             if save:
                 img = taichi_env.render('rgb_array')
-                cv2.imwrite(f'tmp/recorder/{i:04d}.png', img[:, :, ::-1])
+                cv2.imwrite(f'./tmp/recorder/{i:04d}.png', img[:, :, ::-1])
             else:
                 if not is_on_server():
                     taichi_env.render('human')

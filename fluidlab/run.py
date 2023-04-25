@@ -6,6 +6,7 @@ import argparse
 import numpy as np
 
 import fluidlab.envs
+from fluidlab.envs.fluid_env import FluidEnv
 from fluidlab.utils.logger import Logger
 from fluidlab.optimizer.solver import solve_policy
 from fluidlab.optimizer.recorder import record_target, replay_policy, replay_target

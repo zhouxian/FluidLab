@@ -132,3 +132,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# We don't want trajectory images to clog up the repo.
+*tmp/
