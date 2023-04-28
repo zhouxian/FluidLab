@@ -80,8 +80,8 @@ class Recorder:
 
         taichi_env.apply_agent_action_p(policy.get_actions_p())
 
-        save = False
-        # save = True
+        # save = False
+        save = True
         if save:
             os.makedirs(f'tmp/replay', exist_ok=True)
             
