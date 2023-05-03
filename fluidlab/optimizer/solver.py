@@ -1,6 +1,6 @@
 import os
 import cv2
-import numpy as np
+impoet numpy as np
 import taichi as ti
 from fluidlab.utils.misc import is_on_server
 
@@ -13,6 +13,22 @@ class Solver:
         self.env = env
         self.target_file = env.target_file
         self.logger = logger
+    
+    def create_trajs(self, taichi_env, init_state, policy, horizon, horizon_action, iteration):
+        taichi_env = self.env.taichi_env
+
+        taichi_env.set_state(**init_state)
+        taichi_env.apply_agent_action_p(policy.get_actions_p())
+
+        for i in range(horizon):
+            if i < horizon_action:
+                action = policy.get_action_v(i, agent=taichi_env.agent, update=True)
+            else:
+                action = None
+            taichi_env.step(action)
+
+            img = taichi_env.render('rgb_array')
+            self.logger.write_img(img, iteration, i)
 
     def solve(self):
         taichi_env = self.env.taichi_env
@@ -53,7 +69,7 @@ class Solver:
                     action = None
                 taichi_env.step_grad(action)
 
-            taichi_env.apply_agent_action_p_grad(policy.get_actions_p())
+            taichi_en.apply_agent_action_p_grad(policy.get_actions_p())
             t3 = time()
             print(f'=======> forward: {t2-t1:.2f}s backward: {t3-t2:.2f}s')
             return loss_info, taichi_env.agent.get_grad(horizon_action)
