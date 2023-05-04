@@ -134,8 +134,8 @@ class RandomGaussianPolicy():
         # Let the mean just be the average of init_range[0] and init_range[1] for both v and p.
         mean_v = (init_range.v[0][0] + init_range.v[0][1]) / 2
         mean_p = (init_range.p[0][0] + init_range.p[0][1]) / 2
-        self.actions_v = np.random.normal(mean_v, 1.0, size=(horizon, action_dim))
-        self.actions_p = np.random.normal(mean_p, 1.0, size=(action_dim))
+        self.actions_v = np.random.normal(mean_v, 0.1, size=(horizon, action_dim))
+        self.actions_p = np.random.normal(mean_p, 0.1, size=(action_dim))
 
     def get_action_v(self, i, **kwargs):
         assert 0 <= i < self.horizon
