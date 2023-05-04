@@ -1,6 +1,6 @@
 import os
 import cv2
-impoet numpy as np
+import numpy as np
 import taichi as ti
 from fluidlab.utils.misc import is_on_server
 
@@ -14,9 +14,12 @@ class Solver:
         self.target_file = env.target_file
         self.logger = logger
     
-    def create_trajs(self, taichi_env, init_state, policy, horizon, horizon_action, iteration):
+    def create_trajs(self, iteration):
         taichi_env = self.env.taichi_env
-
+        policy = self.env.trainable_policy(self.cfg.optim, self.cfg.init_range)
+        horizon = self.env.horizon
+        horizon_action = self.env.horizon_action
+        init_state = taichi_env.get_state()
         taichi_env.set_state(**init_state)
         taichi_env.apply_agent_action_p(policy.get_actions_p())
 
@@ -26,7 +29,7 @@ class Solver:
             else:
                 action = None
             taichi_env.step(action)
-
+            # obs = self.env._get_obs()
             img = taichi_env.render('rgb_array')
             self.logger.write_img(img, iteration, i)
 
@@ -115,3 +118,7 @@ def solve_policy(env, logger, cfg):
     env.reset()
     solver = Solver(env, logger, cfg)
     solver.solve()
+def gen_trajs_from_policy(env, logger, cfg):
+    env.reset()
+    solver = Solver(env, logger, cfg)
+    solver.create_trajs(1)

@@ -8,7 +8,7 @@ import numpy as np
 import fluidlab.envs
 from fluidlab.envs.fluid_env import FluidEnv
 from fluidlab.utils.logger import Logger
-from fluidlab.optimizer.solver import solve_policy
+from fluidlab.optimizer.solver import solve_policy, gen_trajs_from_policy
 from fluidlab.optimizer.recorder import record_target, replay_policy, replay_target
 from fluidlab.utils.config import load_config
 
@@ -24,6 +24,7 @@ def get_args():
     parser.add_argument("--replay_target", action='store_true')
     parser.add_argument("--path", type=str, default=None)
     parser.add_argument("--renderer_type", type=str, default='GGUI')
+    parser.add_argument("--gen_trajs", action="store_true")
 
 
     args = parser.parse_args()
@@ -55,6 +56,14 @@ def main():
         else:
             env = gym.make(args.env_name, seed=args.seed, loss=False, loss_type='diff', renderer_type=args.renderer_type)
         replay_policy(env, path=args.path)
+
+    elif args.gen_trajs:
+        if cfg is not None:
+            env = gym.make(cfg.EXP.env_name, seed=cfg.EXP.seed, loss=False, loss_type="diff", renderer_type=args.renderer_type)
+        else:
+            env = gym.make(args.env_name, seed=args.seed, loss=False, loss_type="diff", renderer_type=args.renderer_type)
+        logger = Logger(args.exp_name)
+        gen_trajs_from_policy(env, logger, cfg.SOLVER)
     else:
         logger = Logger(args.exp_name)
         env = gym.make(cfg.EXP.env_name, seed=cfg.EXP.seed, loss=True, loss_type='diff', renderer_type=args.renderer_type)
