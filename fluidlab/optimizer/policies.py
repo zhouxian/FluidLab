@@ -127,6 +127,22 @@ class MousePolicy_vxz(MousePolicy):
 
         return action_v
 
+class RandomGaussianPolicy():
+    def __init__(self, init_range, action_dim, horizon, fix_dim=None):
+        self.horizon = horizon
+        self.action_dim = action_dim
+        # Let the mean just be the average of init_range[0] and init_range[1] for both v and p.
+        mean_v = (init_range.v[0][0] + init_range.v[0][1]) / 2
+        mean_p = (init_range.p[0][0] + init_range.p[0][1]) / 2
+        self.actions_v = np.random.normal(mean_v, 1.0, size=(horizon, action_dim))
+        self.actions_p = np.random.normal(mean_p, 1.0, size=(action_dim))
+
+    def get_action_v(self, i, **kwargs):
+        assert 0 <= i < self.horizon
+        return self.actions_v[i]
+
+    def get_actions_p(self):
+        return self.actions_p
 
 class TrainablePolicy:
     def __init__(self, optim_cfg, init_range, action_dim, horizon, action_range, fix_dim=None):

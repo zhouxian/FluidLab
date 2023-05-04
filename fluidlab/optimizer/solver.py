@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import taichi as ti
 from fluidlab.utils.misc import is_on_server
-
 from fluidlab.fluidengine.taichi_env import TaichiEnv
 
 
@@ -16,8 +15,8 @@ class Solver:
     
     def create_trajs(self, iteration):
         taichi_env = self.env.taichi_env
-        policy = self.env.trainable_policy(self.cfg.optim, self.cfg.init_range)
         horizon = self.env.horizon
+        policy = self.env.random_policy(self.cfg.init_range)
         horizon_action = self.env.horizon_action
         init_state = taichi_env.get_state()
         taichi_env.set_state(**init_state)
@@ -121,4 +120,4 @@ def solve_policy(env, logger, cfg):
 def gen_trajs_from_policy(env, logger, cfg):
     env.reset()
     solver = Solver(env, logger, cfg)
-    solver.create_trajs(1)
+    solver.create_trajs(2)
