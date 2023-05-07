@@ -28,25 +28,34 @@ class ImageWriter:
         cv2.imwrite(img_path, img[:, :, ::-1])
 
 class TrajectoryWriter:
+    TRAJS_FNAME = "trajs.hdf5"
     def __init__(self, exp_name):
         self.exp_name = exp_name
-        self.dir = os.path.join(get_src_dir(), '..', 'trajs')
-    def write(self, sim_state, img_obs, iteration: int):
-        with h5py.File(f"{self.exp_name}.hdf5", "a") as f:
-            if self.exp_name not in f.keys():
-                f.create_group(self.exp_name)
-            g = f[self.exp_name]
-            print(g.keys())
+        self.dir = os.path.join(get_src_dir(), '..', self.TRAJS_FNAME)
+    def write(self, sim_state, img_obs, iteration: int, t: int):
+        with h5py.File(self.dir, "a") as f: 
+            g = f.require_group(self.exp_name)
+            traj = g.require_group("traj" + str(iteration))
+            tstep = traj.require_group("t_" + str(t))
+            sim_state_g = tstep.require_group("sim_state")
+            sim_state_g["x"] = sim_state["x"]
+            sim_state_g["v"] = sim_state["v"]
+            sim_state_g["used"] = sim_state["used"]
+            sim_state_g["agent"] = sim_state.get("used", [])
+            sim_state_g["smoke_field"] = sim_state.get("smoke_field", [])
+            tstep["img_obs"] = img_obs
 class Logger:
     def __init__(self, exp_name):
         self.exp_name = exp_name
         self.summary_writer = SummaryWriter(exp_name)
         self.image_writer = ImageWriter(exp_name)
+        self.traj_writer = TrajectoryWriter(exp_name)
         self.last_step_t = time()
 
     def write_img(self, img, iteration, step):
         self.image_writer.write(img, iteration, step)
-
+    def write_traj(self, sim_state, img_obs, iteration: int, t: int):
+        self.traj_writer.write(sim_state, img_obs, iteration, t)
     def save_policy(self, policy, iteration):
         policy_dir = os.path.join(get_src_dir(), '..', 'logs', 'policies', self.exp_name)
         os.makedirs(policy_dir, exist_ok=True)
@@ -76,4 +85,4 @@ class Logger:
 if __name__ == "__main__":
     # Create a test TrajectoryWriter
     writer = TrajectoryWriter("latteart")
-    writer.write([], [], 1)
+    writer.write([1], [2], 1)

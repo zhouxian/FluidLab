@@ -28,10 +28,10 @@ class Solver:
             else:
                 action = None
             taichi_env.step(action)
-            # obs = self.env._get_obs()
             sim_state = self.env.taichi_env.get_state_RL() 
             img = taichi_env.render('rgb_array')
             self.logger.write_img(img, iteration, i)
+            self.logger.write_traj(sim_state, img, iteration, i)
 
     def solve(self):
         taichi_env = self.env.taichi_env
