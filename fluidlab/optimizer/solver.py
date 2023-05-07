@@ -27,11 +27,12 @@ class Solver:
                 action = policy.get_action_v(i, agent=taichi_env.agent, update=True)
             else:
                 action = None
-            taichi_env.step(action)
             sim_state = self.env.taichi_env.get_state_RL() 
             img = taichi_env.render('rgb_array')
+            taichi_env.step(action)
+            self.logger.write_traj(action, sim_state, img, iteration, i)
+            img = taichi_env.render('rgb_array')
             self.logger.write_img(img, iteration, i)
-            self.logger.write_traj(sim_state, img, iteration, i)
 
     def solve(self):
         taichi_env = self.env.taichi_env

@@ -32,7 +32,7 @@ class TrajectoryWriter:
     def __init__(self, exp_name):
         self.exp_name = exp_name
         self.dir = os.path.join(get_src_dir(), '..', self.TRAJS_FNAME)
-    def write(self, sim_state, img_obs, iteration: int, t: int):
+    def write(self, action, sim_state, img_obs, iteration: int, t: int):
         with h5py.File(self.dir, "a") as f: 
             g = f.require_group(self.exp_name)
             traj = g.require_group("traj" + str(iteration))
@@ -44,6 +44,7 @@ class TrajectoryWriter:
             sim_state_g["agent"] = sim_state.get("used", [])
             sim_state_g["smoke_field"] = sim_state.get("smoke_field", [])
             tstep["img_obs"] = img_obs
+            tstep["action"] = action
 class Logger:
     def __init__(self, exp_name):
         self.exp_name = exp_name
@@ -54,8 +55,8 @@ class Logger:
 
     def write_img(self, img, iteration, step):
         self.image_writer.write(img, iteration, step)
-    def write_traj(self, sim_state, img_obs, iteration: int, t: int):
-        self.traj_writer.write(sim_state, img_obs, iteration, t)
+    def write_traj(self, action, sim_state, img_obs, iteration: int, t: int):
+        self.traj_writer.write(action, sim_state, img_obs, iteration, t)
     def save_policy(self, policy, iteration):
         policy_dir = os.path.join(get_src_dir(), '..', 'logs', 'policies', self.exp_name)
         os.makedirs(policy_dir, exist_ok=True)
