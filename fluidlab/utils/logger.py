@@ -1,5 +1,6 @@
 import os
 import cv2
+import h5py 
 import numpy as np
 import pickle as pkl
 from time import time
@@ -26,6 +27,16 @@ class ImageWriter:
         os.makedirs(img_dir, exist_ok=True)
         cv2.imwrite(img_path, img[:, :, ::-1])
 
+class TrajectoryWriter:
+    def __init__(self, exp_name):
+        self.exp_name = exp_name
+        self.dir = os.path.join(get_src_dir(), '..', 'trajs')
+    def write(self, sim_state, img_obs, iteration: int):
+        with h5py.File(f"{self.exp_name}.hdf5", "a") as f:
+            if self.exp_name not in f.keys():
+                f.create_group(self.exp_name)
+            g = f[self.exp_name]
+            print(g.keys())
 class Logger:
     def __init__(self, exp_name):
         self.exp_name = exp_name
@@ -62,4 +73,7 @@ class Logger:
         self.summary_writer.write(iteration, tb_info)
         self.last_step_t = cur_t
 
-
+if __name__ == "__main__":
+    # Create a test TrajectoryWriter
+    writer = TrajectoryWriter("latteart")
+    writer.write([], [], 1)

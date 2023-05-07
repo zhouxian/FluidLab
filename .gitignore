@@ -137,3 +137,4 @@ dmypy.json
 *tmp/
 
 # Ignore debug folder
+.vscode/
