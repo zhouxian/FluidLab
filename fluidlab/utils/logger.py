@@ -29,14 +29,14 @@ class ImageWriter:
 
 class TrajectoryWriter:
     TRAJS_FNAME = "trajs.hdf5"
+    dir_name = os.path.join(get_src_dir(), '..', TRAJS_FNAME)
     def __init__(self, exp_name):
         self.exp_name = exp_name
-        self.dir = os.path.join(get_src_dir(), '..', self.TRAJS_FNAME)
     def write(self, action, sim_state, img_obs, iteration: int, t: int):
-        with h5py.File(self.dir, "a") as f: 
+        with h5py.File(TrajectoryWriter.dir_name, "a") as f: 
             g = f.require_group(self.exp_name)
             traj = g.require_group("traj" + str(iteration))
-            tstep = traj.require_group("t_" + str(t))
+            tstep = traj.require_group(f"t_{t:04d}")
             sim_state_g = tstep.require_group("sim_state")
             sim_state_g["x"] = sim_state["x"]
             sim_state_g["v"] = sim_state["v"]
@@ -44,7 +44,13 @@ class TrajectoryWriter:
             sim_state_g["agent"] = sim_state.get("used", [])
             sim_state_g["smoke_field"] = sim_state.get("smoke_field", [])
             tstep["img_obs"] = img_obs
-            tstep["action"] = action
+            tstep["action"] = action if action is not None else []
+    def print_trajs():
+        with h5py.File(TrajectoryWriter.dir_name, "r") as f:
+            def p(x):
+                num_indents = x.count("/")
+                print('\t' * num_indents + x)
+            f.visit(p)
 class Logger:
     def __init__(self, exp_name):
         self.exp_name = exp_name
@@ -86,4 +92,5 @@ class Logger:
 if __name__ == "__main__":
     # Create a test TrajectoryWriter
     writer = TrajectoryWriter("latteart")
-    writer.write([1], [2], 1)
+    # writer.write([1], [2], 1)
+    TrajectoryWriter.print_trajs()
