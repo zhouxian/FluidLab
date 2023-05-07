@@ -3,7 +3,6 @@ import cv2
 import numpy as np
 import taichi as ti
 from fluidlab.utils.misc import is_on_server
-
 from fluidlab.fluidengine.taichi_env import TaichiEnv
 
 
@@ -13,6 +12,25 @@ class Solver:
         self.env = env
         self.target_file = env.target_file
         self.logger = logger
+    
+    def create_trajs(self, iteration):
+        taichi_env = self.env.taichi_env
+        horizon = self.env.horizon
+        policy = self.env.random_policy(self.cfg.init_range)
+        horizon_action = self.env.horizon_action
+        init_state = taichi_env.get_state()
+        taichi_env.set_state(**init_state)
+        taichi_env.apply_agent_action_p(policy.get_actions_p())
+
+        for i in range(horizon):
+            if i < horizon_action:
+                action = policy.get_action_v(i, agent=taichi_env.agent, update=True)
+            else:
+                action = None
+            taichi_env.step(action)
+            # obs = self.env._get_obs()
+            img = taichi_env.render('rgb_array')
+            self.logger.write_img(img, iteration, i)
 
     def solve(self):
         taichi_env = self.env.taichi_env
@@ -53,7 +71,7 @@ class Solver:
                     action = None
                 taichi_env.step_grad(action)
 
-            taichi_env.apply_agent_action_p_grad(policy.get_actions_p())
+            taichi_en.apply_agent_action_p_grad(policy.get_actions_p())
             t3 = time()
             print(f'=======> forward: {t2-t1:.2f}s backward: {t3-t2:.2f}s')
             return loss_info, taichi_env.agent.get_grad(horizon_action)
@@ -99,3 +117,7 @@ def solve_policy(env, logger, cfg):
     env.reset()
     solver = Solver(env, logger, cfg)
     solver.solve()
+def gen_trajs_from_policy(env, logger, cfg):
+    env.reset()
+    solver = Solver(env, logger, cfg)
+    solver.create_trajs(2)
