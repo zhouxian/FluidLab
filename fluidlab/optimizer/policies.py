@@ -127,7 +127,7 @@ class MousePolicy_vxz(MousePolicy):
 
         return action_v
 
-class RandomGaussianPolicy():
+class RandomGaussianPolicy:
     def __init__(self, init_range, action_dim, horizon, fix_dim=None):
         self.horizon = horizon
         self.action_dim = action_dim
@@ -143,6 +143,23 @@ class RandomGaussianPolicy():
 
     def get_actions_p(self):
         return self.actions_p
+
+class CorrelatedNoisePolicy:
+    def __int__(self, beta, cov, action_dim, horizon):
+        self.horizon = horizon
+        self.action_dim = action_dim
+        self.beta = beta
+        self.cov = cov 
+        self.n_t = 0
+    def get_action_v(self, i, **kwargs):
+        assert 0 <= i < self.horizon
+        # Setup normal
+        u_t = np.random.multivariate_normal(np.zeros_like(self.action_dim), self.cov)
+        # Calculate noise term
+        self.n_t = self.beta * u_t + (1 - self.beta) * self.n_t
+        # This noise represents our action because we are working with random action sequences.
+        # However, we want our sampled actions to be smoothly correlated.
+        return self.n_t
 
 class TrainablePolicy:
     def __init__(self, optim_cfg, init_range, action_dim, horizon, action_range, fix_dim=None):
