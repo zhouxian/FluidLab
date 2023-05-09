@@ -142,4 +142,5 @@ class LatteArtEnv(FluidEnv):
     def trainable_policy(self, optim_cfg, init_range):
         return LatteArtPolicy(optim_cfg, init_range, self.agent.action_dim, self.horizon_action, self.action_range)
     def random_policy(self, init_range):
-        return RandomGaussianPolicy(init_range, self.agent.action_dim, self.horizon_action)
+        # return RandomGaussianPolicy(init_range, self.agent.action_dim, self.horizon_action)
+        return CorrelatedNoisePolicy(self.agent.action_dim, self.horizon_action)

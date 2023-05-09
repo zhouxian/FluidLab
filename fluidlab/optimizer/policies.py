@@ -145,21 +145,23 @@ class RandomGaussianPolicy:
         return self.actions_p
 
 class CorrelatedNoisePolicy:
-    def __int__(self, beta, cov, action_dim, horizon):
+    def __init__(self, action_dim, horizon, beta = 0.75, scale = 0.1):
         self.horizon = horizon
         self.action_dim = action_dim
         self.beta = beta
-        self.cov = cov 
+        self.cov = np.eye(action_dim) * scale 
         self.n_t = 0
-    def get_action_v(self, i, **kwargs):
-        assert 0 <= i < self.horizon
+    def get_action_v(self, i = 0, **kwargs):
         # Setup normal
-        u_t = np.random.multivariate_normal(np.zeros_like(self.action_dim), self.cov)
+        u_t = np.random.multivariate_normal(np.zeros(self.action_dim), self.cov)
         # Calculate noise term
         self.n_t = self.beta * u_t + (1 - self.beta) * self.n_t
         # This noise represents our action because we are working with random action sequences.
         # However, we want our sampled actions to be smoothly correlated.
         return self.n_t
+    def get_actions_p(self, i = 0, **kwargs):
+        # For now, do not distinguish between these two kinds of actions
+        return self.get_action_v(i)
 
 class TrainablePolicy:
     def __init__(self, optim_cfg, init_range, action_dim, horizon, action_range, fix_dim=None):
@@ -397,4 +399,3 @@ class TransportingPolicy(TrainablePolicy):
         super(TransportingPolicy, self).__init__(*args, **kwargs)
         self.trainable = np.full(self.comp_actions_shape[0], False)
         self.trainable[:-1] = True
-
