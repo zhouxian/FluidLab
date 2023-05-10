@@ -9,7 +9,7 @@ from fluidlab.fluidengine.taichi_env import TaichiEnv
 class Solver:
     def __init__(self, env, logger=None, cfg=None):
         self.cfg = cfg
-        self.env = env
+        self.env = env 
         self.target_file = env.target_file
         self.logger = logger
     
@@ -27,8 +27,10 @@ class Solver:
                 action = policy.get_action_v(i, agent=taichi_env.agent, update=True)
             else:
                 action = None
+            sim_state = self.env.taichi_env.get_state_RL() 
+            img = taichi_env.render('rgb_array')
             taichi_env.step(action)
-            # obs = self.env._get_obs()
+            self.logger.write_traj(action, sim_state, img, iteration, i)
             img = taichi_env.render('rgb_array')
             self.logger.write_img(img, iteration, i)
 
@@ -120,4 +122,4 @@ def solve_policy(env, logger, cfg):
 def gen_trajs_from_policy(env, logger, cfg):
     env.reset()
     solver = Solver(env, logger, cfg)
-    solver.create_trajs(2)
+    solver.create_trajs(3)
