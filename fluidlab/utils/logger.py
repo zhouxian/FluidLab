@@ -37,7 +37,11 @@ class TrajectoryWriter:
         with h5py.File(TrajectoryWriter.dir_name, "a") as f: 
             g = f.require_group(self.exp_name)
             traj = g.require_group("traj" + str(iteration))
+            traj.pop("t_{t:04d}", None)
             tstep = traj.require_group(f"t_{t:04d}")
+            tstep.pop("sim_state", None)
+            tstep.pop("img_obs", None)
+            tstep.pop("action", None)
             sim_state_g = tstep.require_group("sim_state")
             sim_state_g["x"] = sim_state["x"]
             sim_state_g["v"] = sim_state["v"]
