@@ -25,6 +25,7 @@ class ImageWriter:
         img_dir = os.path.join(self.dir, f'{iteration}')
         img_path = os.path.join(self.dir, f'{iteration}/{step:04d}.png')
         os.makedirs(img_dir, exist_ok=True)
+        img = img[200:-200, 200:-200]
         cv2.imwrite(img_path, img[:, :, ::-1])
 
 class TrajectoryWriter:

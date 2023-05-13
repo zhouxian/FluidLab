@@ -12,7 +12,7 @@ from fluidlab.utils.misc import *
 
 # ti.init(arch=ti.gpu, device_memory_GB=1, packed=True)
 # ti.init(arch=ti.gpu, device_memory_GB=10, packed=True)
-ti.init(arch=ti.gpu, device_memory_GB=10, packed=True, debug=True)
+ti.init(arch=ti.gpu, device_memory_GB=10, packed=True, debug=False)
 
 @ti.data_oriented
 class TaichiEnv:
