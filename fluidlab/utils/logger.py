@@ -1,4 +1,5 @@
 import os
+from PIL import Image
 import cv2
 import h5py 
 import numpy as np
@@ -25,9 +26,7 @@ class ImageWriter:
         img_dir = os.path.join(self.dir, f'{iteration}')
         img_path = os.path.join(self.dir, f'{iteration}/{step:04d}.png')
         os.makedirs(img_dir, exist_ok=True)
-        img = img[200:-200, 200:-200]
         cv2.imwrite(img_path, img[:, :, ::-1])
-
 class TrajectoryWriter:
     TRAJS_FNAME = "trajs.hdf5"
     dir_name = os.path.join(get_src_dir(), '..', TRAJS_FNAME)
@@ -45,11 +44,12 @@ class TrajectoryWriter:
             sim_state_g = tstep.require_group("sim_state")
             sim_state_g["x"] = sim_state["x"]
             sim_state_g["v"] = sim_state["v"]
-            sim_state_g["used"] = sim_state["used"]
-            sim_state_g["agent"] = sim_state.get("used", [])
-            sim_state_g["smoke_field"] = sim_state.get("smoke_field", [])
+            # sim_state_g["used"] = sim_state["used"]
+            # sim_state_g["agent"] = sim_state.get("used", [])
+            # sim_state_g["smoke_field"] = sim_state.get("smoke_field", [])
             tstep["img_obs"] = img_obs
-            tstep["action"] = action if action is not None else []
+            action = action.astype('float32') if action is not None else []
+            tstep["action"] = action 
     def print_trajs():
         with h5py.File(TrajectoryWriter.dir_name, "r") as f:
             def p(x):
@@ -63,11 +63,17 @@ class Logger:
         self.image_writer = ImageWriter(exp_name)
         self.traj_writer = TrajectoryWriter(exp_name)
         self.last_step_t = time()
-
+    
+    def resize_img(self, img):
+        pil_img = Image.fromarray(img)
+        pil_img = pil_img.resize((256, 256), resample=Image.Resampling.LANCZOS) 
+        return np.array(pil_img)
     def write_img(self, img, iteration, step):
+        img = self.resize_img(img)
         self.image_writer.write(img, iteration, step)
     def write_traj(self, action, sim_state, img_obs, iteration: int, t: int):
-        self.traj_writer.write(action, sim_state, img_obs, iteration, t)
+        img = self.resize_img(img_obs)
+        self.traj_writer.write(action, sim_state, img, iteration, t)
     def save_policy(self, policy, iteration):
         policy_dir = os.path.join(get_src_dir(), '..', 'logs', 'policies', self.exp_name)
         os.makedirs(policy_dir, exist_ok=True)

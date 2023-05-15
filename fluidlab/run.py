@@ -14,7 +14,7 @@ from fluidlab.utils.config import load_config
 
 def get_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--exp_name", type=str, default='test')
+    parser.add_argument("--exp_name", type=str, default='exp_latteart')
     parser.add_argument("--env_name", type=str, default='')
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--cfg_file", type=str, default=None)
