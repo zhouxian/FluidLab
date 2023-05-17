@@ -2,7 +2,7 @@
 # FluidLab: A Differentiable Environment for Benchmarking Complex Fluid Manipulation
 
 <p align="left">
-    <a href='https://arxiv.org/abs/2301.06015'>
+    <a href='https://arxiv.org/abs/2303.02346'>
       <img src='https://img.shields.io/badge/Paper-arXiv-green?style=plastic&logo=arXiv&logoColor=green' alt='Paper arXiv'>
     </a>
     <a href='https://fluidlab2023.github.io/'>
