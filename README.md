@@ -38,6 +38,7 @@ git clone https://github.com/zhouxian/FluidLab.git
 ```
 We recommend working with a conda environment.
 ```
+cd FluidLab/
 conda env create -f environment.yml
 conda activate fluidlab
 ```
@@ -45,7 +46,6 @@ If installing from this yaml file doesn't work, manual installation missing pack
 
 Finally, install FluidLab.
 ```
-cd FluidLab/
 pip install -e .
 ```
 
@@ -74,6 +74,7 @@ Compile GLRenderer using our provided docker file. (Assuming you are using anaco
 ```
 sudo docker build -t fluidlab-glrenderer fluidlab/fluidengine/renderers/gl_renderer_src
 
+# make sure you replace {username} with your own
 sudo docker run \
   -v ${PWD}/fluidlab/fluidengine/renderers/gl_renderer_src:/workspace \
   -v /home/{username}/anaconda3:/home/{username}/anaconda3 \

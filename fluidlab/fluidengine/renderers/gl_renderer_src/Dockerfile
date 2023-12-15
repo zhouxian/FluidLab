@@ -1,5 +1,5 @@
-# The docker file is borrowed from https://github.com/columbia-ai-robotics/dextairity
-FROM nvidia/cuda:9.2-devel-ubuntu18.04
+# The docker file is borrowed from https://github.com/Xingyu-Lin/softgym
+FROM xingyu/softgym
 
 # Dependencies for glvnd and X11.
 RUN apt-get update \
@@ -22,6 +22,6 @@ RUN apt update && apt install -y cmake build-essential libgl1-mesa-dev freeglut3
 # Install OpenEXR
 RUN apt update && apt install -y openexr
 
-RUN mkdir /workspace/ && cd /workspace/
+RUN cd /workspace/
 
 WORKDIR /workspace
